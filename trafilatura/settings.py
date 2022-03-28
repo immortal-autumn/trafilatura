@@ -7,6 +7,7 @@ Listing a series of settings that are applied module-wide.
 ## under GNU GPL v3 license
 
 import configparser
+from collections import defaultdict
 
 from os import cpu_count
 from pathlib import Path
@@ -49,6 +50,23 @@ CUT_EMPTY_ELEMS = {'article', 'b', 'blockquote', 'dd', 'div', 'dt', 'em',
                    # 'meta', 'td', 'a', 'caption', 'dl', 'header',
                    # 'colgroup', 'col',
 #CUT_EMPTY_ELEMS = {'div', 'span'}
+
+
+LINK_DENSITY_THRESHOULD = defaultdict(lambda : LINK_DENSITY_THRESHOULD['EN'],
+    {
+        'CN': {
+            'p': (15, 0.8),
+            'with_child': (50, 0.66),
+            'without_child': (100, 0.66)
+        },
+        'EN': {
+            'p': (25, 0.8),
+            'with_child': (100, 0.66),
+            'without_child': (200, 0.66)
+        }
+    }
+)
+
 
 # order could matter, using lists to keep extraction deterministic
 MANUALLY_CLEANED = [

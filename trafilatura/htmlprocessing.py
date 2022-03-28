@@ -13,7 +13,7 @@ from lxml import etree
 from lxml.html.clean import Cleaner
 
 from .filters import duplicate_test, textfilter
-from .settings import CUT_EMPTY_ELEMS, DEFAULT_CONFIG, MANUALLY_CLEANED, MANUALLY_STRIPPED
+from .settings import CUT_EMPTY_ELEMS, DEFAULT_CONFIG, MANUALLY_CLEANED, MANUALLY_STRIPPED, LINK_DENSITY_THRESHOULD
 from .utils import trim
 
 
@@ -116,7 +116,7 @@ def collect_link_info(links_xpath):
     return linklen, elemnum, shortelems, mylist
 
 
-def link_density_test(element):
+def link_density_test(element, target_language=None):
     '''Remove sections which are rich in links (probably boilerplate)'''
     links_xpath, mylist = element.xpath('.//ref'), []
     if links_xpath:
@@ -127,18 +127,18 @@ def link_density_test(element):
             #if element.getnext() is None:
             #    limitlen, threshold = 100, 0.8
             #else:
-            limitlen, threshold = 25, 0.8
+            limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['p']
             #if 'hi' in list(element):
             #    limitlen, threshold = 100, 0.8
         #elif element.tag == 'head':
         #    limitlen, threshold = 50, 0.8
         else:
             if element.getnext() is None:
-                limitlen, threshold = 200, 0.66
+                limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['without_child']
             #elif re.search(r'[.?!:]', elemtext):
             #    limitlen, threshold = 150, 0.66
             else:
-                limitlen, threshold = 100, 0.66
+                limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['with_child']
             # suggested:
             # limitlen, threshold = (200, 0.66) if element.getnext() is None else (100, 0.66)
         if elemlen < limitlen:

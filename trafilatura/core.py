@@ -436,12 +436,12 @@ def handle_textelem(element, potential_tags, dedupbool, config):
     return new_element
 
 
-def delete_by_link_density(subtree, tagname, backtracking=False):
+def delete_by_link_density(subtree, tagname, backtracking=False, target_language=None):
     '''Determine the link density of elements with respect to their length,
        and remove the elements identified as boilerplate.'''
     myelems, deletions = {}, []
     for elem in subtree.iter(tagname):
-        result, templist = link_density_test(elem)
+        result, templist = link_density_test(elem, target_language=target_language)
         if result is True:
             deletions.append(elem)
         elif backtracking is True and len(templist) > 0:
@@ -464,7 +464,7 @@ def delete_by_link_density(subtree, tagname, backtracking=False):
 
 
 def extract_content(tree, favor_precision=False, favor_recall=False, include_tables=False, include_images=False,
-                    include_links=False, deduplicate=False, config=None):
+                    include_links=False, deduplicate=False, config=None, target_language=None):
     '''Find the main content of a page using a set of XPath expressions,
        then extract relevant elements, strip them of unwanted subparts and
        convert them'''
@@ -494,14 +494,14 @@ def extract_content(tree, favor_precision=False, favor_recall=False, include_tab
             if favor_precision is True:
                 subtree = prune_unwanted_nodes(subtree, PRECISION_DISCARD_XPATH)
         # remove elements by link density
-        subtree = delete_by_link_density(subtree, 'div', backtracking=True)
-        subtree = delete_by_link_density(subtree, 'list', backtracking=False)
-        subtree = delete_by_link_density(subtree, 'p', backtracking=False)
+        subtree = delete_by_link_density(subtree, 'div', backtracking=True, target_language=target_language)
+        subtree = delete_by_link_density(subtree, 'list', backtracking=False, target_language=target_language)
+        subtree = delete_by_link_density(subtree, 'p', backtracking=False, target_language=target_language)
         # subtree = delete_by_link_density(subtree, 'head', backtracking=False)
         # also filter fw/head, table and quote elements?
         if favor_precision is True:
-            subtree = delete_by_link_density(subtree, 'head', backtracking=False)
-            subtree = delete_by_link_density(subtree, 'quote', backtracking=False)
+            subtree = delete_by_link_density(subtree, 'head', backtracking=False, target_language=target_language)
+            subtree = delete_by_link_density(subtree, 'quote', backtracking=False, target_language=target_language)
         if 'table' in potential_tags or favor_precision is True:
             for elem in subtree.iter('table'):
                 if link_density_test_tables(elem) is True:
@@ -888,7 +888,7 @@ def bare_extraction(filecontent, url=None, no_fallback=False,
         cleaned_tree = convert_tags(cleaned_tree, include_formatting, include_tables, include_images, include_links)
 
         # Remove navigation bars
-        cleaned_tree = remove_nav(cleaned_tree)
+        # cleaned_tree = remove_nav(cleaned_tree)
 
         # Extract authors (Modified_
         # cleaned_tree, info = extract_info(cleaned_tree)
@@ -904,7 +904,7 @@ def bare_extraction(filecontent, url=None, no_fallback=False,
 
         # extract content
         postbody, temp_text, len_text = extract_content(cleaned_tree, favor_precision, favor_recall, include_tables,
-                                                        include_images, include_links, deduplicate, config)
+                                                        include_images, include_links, deduplicate, config, target_language)
 
         # compare if necessary
         if no_fallback is False:

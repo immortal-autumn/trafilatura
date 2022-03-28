@@ -149,7 +149,7 @@ OVERALL_DISCARD_XPATH = [
     or contains(@style, "hidden") or contains(@hidden, "hidden") or contains(@class, "noprint") or contains(@style, "display:none") or contains(@class, " hidden") or @aria-hidden="true"]''',
 
     # Add some names that is regular named
-    '''.//*[contains(@class, "top") or contains(@class, "dropdown-menu")
+    '''.//*[contains(@class, "dropdown-menu")
     or contains(@class, "content-title") or contains(@class, "content-info")
     or contains(translate(@class, "N", "n"), "nav")
     or contains(translate(@id, "N", "n"), "nav")]''',
