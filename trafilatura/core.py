@@ -602,43 +602,36 @@ def extract_comments(tree, dedupbool, config):
     return comments_body, temp_comments, len(temp_comments), tree
 
 
-# A more precise function for extract info -
-def extract_info(cleaned_tree):
-    # TODO: Construct a dataset for all names
-    info = {}
-    # Extract with author tag
-    for expr in AUTHOR_XPATH:
-        subtree = cleaned_tree.xpath(expr)
-        for ele in subtree:
-            print(ele.text)
-    return cleaned_tree, info
-
-
 # Remove navigation bars from observation - With Tag Ratios
 def remove_nav(cleaned_tree):
-    # TODO: Marking for implementation - Nearly? Wait for check.
-    # print([i.text for i in cleaned_tree.iter('a')])
-    # print(type(cleaned_tree))
-    # print(cleaned_tree.find('a'))
-    for expr in LINKS_XPATH:
-        subtree = cleaned_tree.xpath(expr)
+    tags = ['list', 'table', 'p', 'head', 'quote', 'div']
+    for tag in tags:
+        mark_as_clean = []
+        subtree = cleaned_tree.iter(tag)
         if not subtree:
             continue
+        # if tag == 'table':
+        #     print([ele.text_content() for ele in subtree])
         for ele in subtree:
+            paras_chars_count = len(ele.text_content())
             refs = [i for i in ele.iter('ref')]
-            paras = [i for i in ele.iter('p', 'head', 'quote')]
             refs_count = len(refs)
-            paras_chars_count = sum([(len(i.text) if i.text is not None else 0) for i in paras])
-            # print(paras_chars_count, refs_count)
             if refs_count == 0:
                 refs_count = 1
             ratio = paras_chars_count / refs_count
-            # print([i.text for i in refs], [i.text for i in paras], paras_chars_count, ratio)
-            if ratio < 20:
-                try:
-                    ele.drop_tree()
-                except AttributeError:
-                    ele.getparent().remove(ele)
+            # print(ele.tag, paras_chars_count, ratio, [ref.text_content() for ref in refs], ele.text_content())
+            if ratio < 50:
+                mark_as_clean.append(ele)
+                # try:
+                #     ele.drop_tree()
+                # except AttributeError:
+                #     ele.getparent().remove(ele)
+        # print([e.text_content() for e in mark_as_clean])
+        for ele in mark_as_clean:
+            try:
+                ele.drop_tree()
+            except AttributeError:
+                ele.getparent().remove(ele)
     return cleaned_tree
 
 
@@ -888,10 +881,8 @@ def bare_extraction(filecontent, url=None, no_fallback=False,
         cleaned_tree = convert_tags(cleaned_tree, include_formatting, include_tables, include_images, include_links)
 
         # Remove navigation bars
-        # cleaned_tree = remove_nav(cleaned_tree)
-
-        # Extract authors (Modified_
-        # cleaned_tree, info = extract_info(cleaned_tree)
+        if target_language == 'zh':
+            cleaned_tree = remove_nav(cleaned_tree)
 
         # comments first, then remove
         if include_comments is True:
@@ -904,7 +895,8 @@ def bare_extraction(filecontent, url=None, no_fallback=False,
 
         # extract content
         postbody, temp_text, len_text = extract_content(cleaned_tree, favor_precision, favor_recall, include_tables,
-                                                        include_images, include_links, deduplicate, config, target_language)
+                                                        include_images, include_links, deduplicate, config,
+                                                        target_language)
 
         # compare if necessary
         if no_fallback is False:

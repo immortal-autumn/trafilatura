@@ -22,7 +22,6 @@ from .settings import JUSTEXT_LANGUAGES
 from .utils import trim, HTML_PARSER
 from .xml import TEI_VALID_TAGS
 
-
 LOGGER = logging.getLogger(__name__)
 
 SANITIZED_XPATH = '//aside|//audio|//button|//fieldset|//figure|//footer|//iframe|//input|//label|//link|//nav|//noindex|//noscript|//object|//option|//select|//source|//svg|//time'
@@ -45,6 +44,7 @@ def jt_stoplist_init():
     for language in get_stoplists():
         stoplist.update(get_stoplist(language))
     return tuple(stoplist)
+
 
 JT_STOPLIST = jt_stoplist_init()
 
@@ -74,7 +74,7 @@ def try_justext(tree, url, target_language):
         result_body = None
     else:
         for paragraph in [p for p in paragraphs if not p.is_boilerplate]:
-            #if duplicate_test(paragraph) is not True:
+            # if duplicate_test(paragraph) is not True:
             elem, elem.text = etree.Element('p'), paragraph.text
             result_body.append(elem)
     return result_body
@@ -103,7 +103,8 @@ def sanitize_tree(tree, include_formatting=False, include_links=False, include_i
         etree.strip_tags(cleaned_tree, 'a')
     etree.strip_tags(cleaned_tree, 'span')
     # 2. convert
-    cleaned_tree = convert_tags(cleaned_tree, include_tables=include_tables, include_formatting=include_formatting, include_links=include_links, include_images=include_images)
+    cleaned_tree = convert_tags(cleaned_tree, include_tables=include_tables, include_formatting=include_formatting,
+                                include_links=include_links, include_images=include_images)
     for elem in cleaned_tree.iter('td', 'th', 'tr'):
         # elem.text, elem.tail = trim(elem.text), trim(elem.tail)
         # finish table conversion

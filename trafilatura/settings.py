@@ -26,8 +26,8 @@ def use_config(filename=None, config=None):
     config.read(filename)
     return config
 
-DEFAULT_CONFIG = use_config()
 
+DEFAULT_CONFIG = use_config()
 
 # Safety checks
 DOWNLOAD_THREADS = min(cpu_count(), 16)  # 16 processes at most
@@ -42,31 +42,29 @@ FILE_PROCESSING_CORES = min(cpu_count(), 16)  # 16 processes at most
 # Network
 MAX_SITEMAPS_SEEN = 10000
 
-
 # filters
 CUT_EMPTY_ELEMS = {'article', 'b', 'blockquote', 'dd', 'div', 'dt', 'em',
                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i', 'li', 'main',
                    'p', 'pre', 'q', 'section', 'span', 'strong'}
-                   # 'meta', 'td', 'a', 'caption', 'dl', 'header',
-                   # 'colgroup', 'col',
-#CUT_EMPTY_ELEMS = {'div', 'span'}
+# 'meta', 'td', 'a', 'caption', 'dl', 'header',
+# 'colgroup', 'col',
+# CUT_EMPTY_ELEMS = {'div', 'span'}
 
 
-LINK_DENSITY_THRESHOULD = defaultdict(lambda : LINK_DENSITY_THRESHOULD['EN'],
-    {
-        'CN': {
-            'p': (15, 0.8),
-            'with_child': (50, 0.66),
-            'without_child': (100, 0.66)
-        },
-        'EN': {
-            'p': (25, 0.8),
-            'with_child': (100, 0.66),
-            'without_child': (200, 0.66)
-        }
-    }
-)
-
+LINK_DENSITY_THRESHOULD = defaultdict(lambda: LINK_DENSITY_THRESHOULD['en'],
+                                      {
+                                          'zh': {
+                                              'p': (15, 0.8),
+                                              'with_child': (50, 0.66),
+                                              'without_child': (100, 0.66)
+                                          },
+                                          'en': {
+                                              'p': (25, 0.8),
+                                              'with_child': (100, 0.66),
+                                              'without_child': (200, 0.66)
+                                          }
+                                      }
+                                      )
 
 # order could matter, using lists to keep extraction deterministic
 MANUALLY_CLEANED = [
@@ -87,7 +85,6 @@ MANUALLY_STRIPPED = [
     'abbr', 'acronym', 'address', 'bdi', 'bdo', 'big', 'cite', 'data', 'dfn',
     'font', 'hgroup', 'img', 'ins', 'mark', 'meta', 'ruby', 'small', 'tbody',
     'tfoot', 'thead',
-    # Added:
 ]
 # 'center', 'rb', 'wbr'
 
@@ -127,5 +124,5 @@ JUSTEXT_LANGUAGES = {
     'uk': 'Ukranian',
     'ur': 'Urdu',
     'vi': 'Vietnamese',
-    # 'zh': '',
+    'zh': 'Chinese',
 }

@@ -18,4 +18,6 @@ from .downloads import fetch_url
 from .metadata import extract_metadata
 from .utils import load_html
 
+from .settings import LINK_DENSITY_THRESHOULD
+
 logging.getLogger(__name__).addHandler(logging.NullHandler())
