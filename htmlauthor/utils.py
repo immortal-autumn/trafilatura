@@ -14,6 +14,8 @@ import sys
 
 from functools import lru_cache
 from html import unescape
+from urllib.parse import unquote, unquote_plus
+
 from unicodedata import normalize
 
 # CChardet is faster and can be more accurate
@@ -288,12 +290,6 @@ def normalize_tags(tags):
     return ", ".join(tags)
 
 
-def is_image_file(imagesrc):
-    '''Check if the observed string corresponds to a valid image extension,
-       return False otherwise'''
-    return bool(imagesrc is not None and IMAGE_EXTENSION.search(imagesrc))
-
-
 def filter_urls(linklist, urlfilter):
     'Return a list of links corresponding to the given substring pattern.'
     if urlfilter is None:
@@ -351,19 +347,6 @@ def normalize_authors(current_authors, author_string):
     return '; '.join(new_authors).strip('; ')
 
 
-# todo: document and check this function
-def check_authors(authors, author_blacklist):
-    new_authors = [
-        author
-        for author in authors.split('; ')
-        if author.lower() not in [a.lower() for a in author_blacklist]
-    ]
-
-    if new_authors:
-        return '; '.join(new_authors).strip('; ')
-    return None
-
-
 def uniquify_list(l):
     """
     Remove duplicates from a list while keeping order in an efficient way.
@@ -372,3 +355,8 @@ def uniquify_list(l):
     https://www.peterbe.com/plog/fastest-way-to-uniquify-a-list-in-python-3.6
     """
     return list(dict.fromkeys(l))
+
+
+# Decode url string
+def decode_url_string_to_list(string):
+    return [i.strip() for i in unquote_plus(string).split("/")] if string is not None else None

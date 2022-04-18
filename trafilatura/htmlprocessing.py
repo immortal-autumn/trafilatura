@@ -16,27 +16,26 @@ from .filters import duplicate_test, textfilter
 from .settings import CUT_EMPTY_ELEMS, DEFAULT_CONFIG, MANUALLY_CLEANED, MANUALLY_STRIPPED, LINK_DENSITY_THRESHOULD
 from .utils import trim
 
-
 LOGGER = logging.getLogger(__name__)
 
 # HTML_CLEANER config
 # https://lxml.de/api/lxml.html.clean.Cleaner-class.html
 # https://lxml.de/apidoc/lxml.html.clean.html
 HTML_CLEANER = Cleaner(
-    annoying_tags = False,  # True
-    comments = True,
-    embedded = False,  # True
-    forms = False,  # True
-    frames = False,  # True
-    javascript = False,
-    links = False,
-    meta = False,
-    page_structure = False,
-    processing_instructions = True,
-    remove_unknown_tags = False,
-    safe_attrs_only = False,
-    scripts = False,
-    style = False,
+    annoying_tags=False,  # True
+    comments=True,
+    embedded=False,  # True
+    forms=False,  # True
+    frames=False,  # True
+    javascript=False,
+    links=False,
+    meta=False,
+    page_structure=False,
+    processing_instructions=True,
+    remove_unknown_tags=False,
+    safe_attrs_only=False,
+    scripts=False,
+    style=False,
     # remove_tags = MANUALLY_STRIPPED,
     # kill_tags = MANUALLY_CLEANED,
 )
@@ -60,7 +59,7 @@ def tree_cleaning(tree, include_tables, include_images=False):
     for expression in cleaning_list:
         for element in tree.getiterator(expression):
             try:
-                element.drop_tree() # faster when applicable
+                element.drop_tree()  # faster when applicable
             except AttributeError:
                 element.getparent().remove(element)
     HTML_CLEANER.kill_tags, HTML_CLEANER.remove_tags = cleaning_list, stripping_list
@@ -122,20 +121,20 @@ def link_density_test(element, target_language=None):
     if links_xpath:
         elemtext = element.text_content()
         elemlen = len(trim(elemtext))
-        #elemlen = len(trim(element.text_content()))
-        if element.tag == 'p': #  and not element.getparent().tag == 'item'
-            #if element.getnext() is None:
+        # elemlen = len(trim(element.text_content()))
+        if element.tag == 'p':  # and not element.getparent().tag == 'item'
+            # if element.getnext() is None:
             #    limitlen, threshold = 100, 0.8
-            #else:
+            # else:
             limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['p']
-            #if 'hi' in list(element):
+            # if 'hi' in list(element):
             #    limitlen, threshold = 100, 0.8
-        #elif element.tag == 'head':
+        # elif element.tag == 'head':
         #    limitlen, threshold = 50, 0.8
         else:
             if element.getnext() is None:
                 limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['without_child']
-            #elif re.search(r'[.?!:]', elemtext):
+            # elif re.search(r'[.?!:]', elemtext):
             #    limitlen, threshold = 150, 0.66
             else:
                 limitlen, threshold = LINK_DENSITY_THRESHOULD[target_language]['with_child']
@@ -145,10 +144,11 @@ def link_density_test(element, target_language=None):
             linklen, elemnum, shortelems, mylist = collect_link_info(links_xpath)
             if elemnum == 0:
                 return True, mylist
-            LOGGER.debug('list link text/total: %s/%s – short elems/total: %s/%s', linklen, elemlen, shortelems, elemnum)
-            if linklen >= threshold*elemlen or shortelems/elemnum >= threshold:
+            LOGGER.debug('list link text/total: %s/%s – short elems/total: %s/%s', linklen, elemlen, shortelems,
+                         elemnum)
+            if linklen >= threshold * elemlen or shortelems / elemnum >= threshold:
                 return True, mylist
-            #print(mylist)
+            # print(mylist)
     return False, mylist
 
 
@@ -164,10 +164,10 @@ def link_density_test_tables(element):
             if elemnum == 0:
                 return True
             LOGGER.debug('table link text: %s / total: %s', linklen, elemlen)
-            if (elemlen < 1000 and linklen > 0.8*elemlen) or (elemlen > 1000 and linklen > 0.5*elemlen):
+            if (elemlen < 1000 and linklen > 0.8 * elemlen) or (elemlen > 1000 and linklen > 0.5 * elemlen):
                 return True
             # does more harm than good (issue #76)
-            #if shortelems > len(links_xpath) * 0.66:
+            # if shortelems > len(links_xpath) * 0.66:
             #    return True
     return False
 
@@ -198,7 +198,7 @@ def convert_tags(tree, include_formatting=False, include_tables=False, include_i
         for elem in tree.iter('a', 'ref'):
             elem.tag = 'ref'
             # replace href attribute and delete the rest
-            target = elem.get('href') # defaults to None
+            target = elem.get('href')  # defaults to None
             elem.attrib.clear()
             if target is not None:
                 elem.set('target', target)

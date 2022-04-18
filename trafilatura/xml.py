@@ -9,6 +9,7 @@ All functions related to XML generation, processing and validation.
 import json
 import logging
 import pickle
+import re
 
 from html import unescape
 from io import StringIO
@@ -261,7 +262,11 @@ def xmltotxt(xmloutput, include_formatting, include_links):
             if element.tag in ('graphic', 'row', 'table'):
                 returnlist.append('\n')
             continue
+        # POST_PROCESSING
         textelement = replace_element_text(element, include_formatting, include_links)
+        discard_regex = re.compile(r"\s+")
+        if discard_regex.fullmatch(textelement):
+            continue
         if element.tag in TEXTELEMS:
             returnlist.extend(['\n', textelement, '\n'])
         elif element.tag == 'item':

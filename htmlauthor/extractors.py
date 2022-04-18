@@ -1,6 +1,7 @@
 import json
 import re
 
+from .utils import decode_url_string_to_list
 from .xpaths import *
 
 
@@ -81,6 +82,29 @@ def extract_author_by_keyword(cleaned_tree, tag):
 
 def extract_author_by_name_dict(cleaned_tree):
     pass
+
+
+# TODO: Improve heuristic
+def extract_author_by_link(cleaned_tree):
+    subtree = cleaned_tree.xpath("//ref")
+    if not subtree:
+        return None
+    author = None
+    for ele in subtree:
+        # print([link for link in ele.iterlinks()])
+        words = decode_url_string_to_list(ele.get("href"))
+        if words is None:
+            continue
+        # print(words)
+        for word in words:
+            if word in AUTHOR_LINK_KEYWORD:
+                ind = AUTHOR_LINK_KEYWORD.index(word)
+                if len(words) > ind + 1:
+                    print('>', words[ind + 1])
+            # if not ind:
+            #     continue
+            # print(ind, words[ind])
+    return author
 
 
 def extract_author_by_JSON_LD(cleaned_tree):

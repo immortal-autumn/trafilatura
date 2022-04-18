@@ -781,6 +781,8 @@ def determine_returnstring(document, output_format, include_formatting, include_
         if document.commentsbody is not None:
             returnstring += '\n' + xmltotxt(document.commentsbody, include_formatting, include_links)
             returnstring = returnstring.strip()
+    # Post Processing Return String
+    # returnstring = html_post_processing(returnstring)
     # normalize Unicode format (defaults to NFC)
     return normalize_unicode(returnstring)
 
@@ -941,7 +943,6 @@ def bare_extraction(filecontent, url=None, no_fallback=False,
     except ValueError:
         LOGGER.info('discarding data for url: %s', url)  # document.url , record_id
         return None
-
     # special case: python variables
     if output_format == 'python':
         document.text = xmltotxt(postbody, include_formatting, include_links)

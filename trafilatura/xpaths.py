@@ -99,7 +99,7 @@ OVERALL_DISCARD_XPATH = [
     contains(@id, "bottom") or contains(@class, "bottom")]''',
 
     # related posts, sharing jp-post-flair jp-relatedposts, news outlets + navigation
-    #'''.//*[
+    # '''.//*[
     # self::link
     '''.//*[(self::div or self::item or self::list
              or self::p or self::section or self::span)][
@@ -152,7 +152,11 @@ OVERALL_DISCARD_XPATH = [
     '''.//*[contains(@class, "dropdown-menu")
     or contains(@class, "content-title") or contains(@class, "content-info")
     or contains(translate(@class, "N", "n"), "nav")
-    or contains(translate(@id, "N", "n"), "nav")]''',
+    or contains(translate(@id, "N", "n"), "nav") or contains(translate(@class, "T", "t"), "tit") 
+    or contains(@class, box-text-time)]''',
+
+    # Unusual Align:
+    # '''.//*[contains(@align, right)]''',
     # some confusion names here, may have to improve the logic? Need something to improve the logic here.
     # Just put some manullay cleaned tag here.
     # '''.//*[contains(@class, "yin") or contains(@class, "zlylin") or contains(@class, "dropdown-menu")
@@ -177,7 +181,6 @@ ADDITIONAL_DISCARD_XPATH = [
     ]''',
 ]
 
-
 PRECISION_DISCARD_XPATH = [
     './/header',
     '''.//*[(self::div or self::item or self::list
@@ -186,7 +189,6 @@ PRECISION_DISCARD_XPATH = [
     ]''',
 ]
 
-
 DISCARD_IMAGE_ELEMENTS = [
     '''.//*[(self::div or self::item or self::list
              or self::p or self::section or self::span)][
@@ -194,7 +196,6 @@ DISCARD_IMAGE_ELEMENTS = [
             ]
     '''
 ]
-
 
 COMMENTS_DISCARD_XPATH = [
     './/*[(self::div or self::section)][starts-with(@id, "respond")]',
@@ -209,7 +210,6 @@ COMMENTS_DISCARD_XPATH = [
 LINKS_XPATH = [
     '//div'
 ]
-
 
 AUTHOR_XPATH = [
     '''

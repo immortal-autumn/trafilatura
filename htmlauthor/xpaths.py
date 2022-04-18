@@ -10,6 +10,8 @@ AUTHOR_PREFIX = ["作者", "author", "编辑", "小编", "笔者", "editor", "ed
 AUTHOR_AFTER = ["著", "Edited", "编", "编辑", "电"]
 AUTHOR_MAXLENGTH = 12
 
+AUTHOR_LINK_KEYWORD = ["author", "bianji", "作者", "编辑", "username", "user"]
+
 AUTHOR_RE = re.compile(r'(实习记者|作者|author|编辑|小编|笔者|editor|edited by|written by|记者|主编|实习生|来源|来自|发文机关|执笔人)([\s:： ]+?['
                        r'\u4e00-\u9fa5A-Za-z0-9]+)+| '
                        r'[\u4e00-\u9fa5A-Za-z0-9]+[\s:： ]+(著|Edited|编|编辑|报道)', re.U)

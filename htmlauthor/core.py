@@ -1,7 +1,7 @@
 import logging
 from xml import etree
 from .extractors import (extract_author_by_name_dict, extract_author_by_keyword, extract_author_by_metadata,
-                         extract_author_by_tags, extract_author_by_JSON_LD)
+                         extract_author_by_tags, extract_author_by_JSON_LD, extract_author_by_link)
 
 from htmlauthor.utils import load_html
 from .html_processing import convert_tags, tree_cleaning
@@ -37,6 +37,7 @@ def bare_extraction(file_content):
     This method use a number of heuristics to extract authors from web contents
     """
     author = None
+
     # Load the html to tree content
     tree = load_html(file_content)
     if tree is None:
@@ -46,6 +47,9 @@ def bare_extraction(file_content):
     # Tag conversion & Tree cleaning
     cleaned_tree = tree_cleaning(tree, include_tables=False)
     cleaned_tree = convert_tags(cleaned_tree)
+
+    # Testing area
+    extract_author_by_link(cleaned_tree=cleaned_tree)
 
     # Extract author with JSON LD - the most trusted resource
     author = extract_author_by_JSON_LD(cleaned_tree)
