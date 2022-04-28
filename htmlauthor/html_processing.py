@@ -36,7 +36,7 @@ MANUALLY_CLEANED = [
     'applet', 'audio', 'canvas', 'figure', 'map', 'picture', 'svg', 'video',
     # secondary
     'area', 'blink', 'button', 'datalist', 'dialog',
-    'frame', 'frameset', 'fieldset', 'link', 'input', 'ins', 'label', 'legend',
+    'frame', 'frameset', 'fieldset', 'input', 'ins', 'label', 'legend',
     'marquee', 'math', 'menuitem', 'nav', 'noscript', 'optgroup', 'option',
     'output', 'param', 'progress', 'rp', 'rt', 'rtc', 'select', 'source',
     'style', 'track', 'template', 'textarea', 'time', 'use',

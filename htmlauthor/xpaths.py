@@ -40,7 +40,8 @@ META_XPATH = [
 
 AUTHOR_XPATH = [
     '//*[(self::ref or self::head or self::item or self::p or self::quote or self::div)][@rel="author" or '
-    '@id="author" or @class="author" or @itemprop="author name" or rel="me"]|//author', # specific
+    '@id="author" or @class="author" or @itemprop="author name" or rel="me" or @rel="bianji" or @class="bianji" or '
+    '@id="bianji" or @class="zuozhe" or @id="zuozhe"]|//author', # specific
     '//*[(self::ref or self::head or self::item or self::p or self::quote or self::div)][contains(@class, '
     '"author-name") or '
     'contains(@class, "AuthorName") or contains(@class, "authorName") or contains(@class, "author name")]',
@@ -53,7 +54,8 @@ AUTHOR_XPATH = [
     # generic
     '//*[contains(@class, "author") or contains(@class, "Author") or contains(@id, "Author") or contains(@class, '
     '"screenname") or contains(@data-component, "Byline") or contains(@itemprop, "author") or contains(@class, '
-    '"writer") or contains(@class, "byline")]', # any element
+    '"writer") or contains(@class, "byline") or contains(@class, "bianji") or contains(@class, "zuozhe") or '
+    'contains(@id, "bianji") or contains(@id, "zuozhe")]', # any element
     '//*[(self::ref or self::head or self::item or self::p or self::quote or self::div)][@class="username" or '
     '@class="BBL"]', # not common
 ]

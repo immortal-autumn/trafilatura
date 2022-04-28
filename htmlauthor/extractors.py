@@ -108,8 +108,6 @@ def extract_author_by_link(cleaned_tree):
 
 
 def extract_author_by_JSON_LD(cleaned_tree):
-    # Extract with JSON_ld
-    # print('extracting JSON_ld')
     for expr in JSON_LD_XPATH:
         subtree = cleaned_tree.xpath(expr)
         if not subtree:
@@ -134,11 +132,18 @@ def extract_author_by_metadata(cleaned_tree):
             data = ele.attrib
             if 'name' in data:
                 if data['name'].lower() == 'author':
-                    # print(data['content'])
-                    return data['content'] if 'content' in data else None
+                    tmp = data['content'] if 'content' in data else None
+                    # print(tmp)
+                    if not find_excluded_extraction(tmp):
+                        return tmp
+                    # return data['content'] if 'content' in data else None
             if 'property' in data:
                 if data['property'].lower() == 'article:author':
-                    return data['content'] if 'content' in data else None
+                    # return data['content'] if 'content' in data else None
+                    tmp = data['content'] if 'content' in data else None
+                    if not find_excluded_extraction(tmp):
+                        return tmp
+
     return None
 
 
@@ -177,3 +182,12 @@ def extract_author_by_tags(cleaned_tree):
             if author:
                 return author
     return None
+
+
+heuristics_dict = {
+    "ld": extract_author_by_JSON_LD,
+    "tag": extract_author_by_tags,
+    "keyword": extract_author_by_keyword,
+    "link": extract_author_by_link,
+    "meta": extract_author_by_metadata
+}
